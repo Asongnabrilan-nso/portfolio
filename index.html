@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Asongna Brilan – Computer Engineer, Embedded Systems Developer, Co-founder of PlastiBytes, HWIVC, and LEVON Robotics." />
+  <meta property="og:title" content="Asongna Brilan | Portfolio" />
+  <meta property="og:description" content="Engineer. Builder. Community Leader." />
+  <meta property="og:type" content="website" />
+  <title>Asongna Brilan | Portfolio</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">AB<span class="accent">.</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#ventures">Ventures</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="burger" id="burger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-greeting">Hello, I'm</p>
+      <h1 class="hero-name">Asongna Brilan<br /><span class="hero-surname">Nso Nkengafac</span></h1>
+      <div class="hero-roles">
+        <span class="role-tag">Computer Engineer</span>
+        <span class="role-tag">Embedded Systems Developer</span>
+        <span class="role-tag">Community Builder</span>
+      </div>
+      <p class="hero-tagline">
+        I build hardware that solves real problems — from ocean debris detection systems<br />
+        to AI-powered robotics — and grow communities that innovate together.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      </div>
+      <div class="hero-social">
+        <!-- Update hrefs with your actual profile URLs -->
+        <a href="https://github.com/YOUR_GITHUB" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/YOUR_LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="mailto:plastibytes@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-label">01 / About</div>
+      <h2 class="section-title">Who I Am</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I'm <strong>Asongna Brilan Nso Nkengafac</strong>, a computer engineer and embedded systems developer passionate about building technology that makes a measurable difference — from ocean cleanup hardware to community-run makerspaces.
+          </p>
+          <p>
+            I co-founded <strong>PlastiBytes</strong> to tackle ocean plastic pollution through smart hardware; <strong>HWIVC</strong> to grow a thriving hardware innovation ecosystem; and <strong>LEVON Robotics</strong> to push the frontier of intelligent machines.
+          </p>
+          <p>
+            My work spans firmware engineering (ESP-IDF / FreeRTOS), machine learning on the edge, full-stack web development, and community leadership. I believe great technology is inseparable from the communities that use it.
+          </p>
+          <a href="#contact" class="btn btn-primary" style="margin-top:1.5rem;">Work With Me</a>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Ventures Co-Founded</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">5+</span>
+            <span class="stat-label">Years Building Hardware</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">∞</span>
+            <span class="stat-label">Problems Left to Solve</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills" class="section section-alt">
+    <div class="container">
+      <div class="section-label">02 / Skills</div>
+      <h2 class="section-title">What I Work With</h2>
+      <div class="skills-grid">
+
+        <div class="skill-group">
+          <h3 class="skill-group-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+            Embedded & Firmware
+          </h3>
+          <ul class="skill-list">
+            <li>ESP32 / ESP-IDF (v5)</li>
+            <li>FreeRTOS — tasks, queues, semaphores</li>
+            <li>Arduino Framework</li>
+            <li>STM32 / ARM Cortex-M</li>
+            <li>UART, I2C, SPI, RMT, ADC</li>
+            <li>PlatformIO</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <h3 class="skill-group-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Software & AI
+          </h3>
+          <ul class="skill-list">
+            <li>C / C++</li>
+            <li>Python</li>
+            <li>TFLite Micro / Edge Impulse</li>
+            <li>MQTT (esp_mqtt_client)</li>
+            <li>cJSON / REST APIs</li>
+            <li>Git / GitHub</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <h3 class="skill-group-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            Web Development
+          </h3>
+          <ul class="skill-list">
+            <li>HTML5 / CSS3 / JavaScript</li>
+            <li>Responsive Design</li>
+            <li>React (basics)</li>
+            <li>Node.js</li>
+            <li>GitHub Pages / Netlify</li>
+            <li>UI/UX Principles</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <h3 class="skill-group-title">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            Hardware & Tools
+          </h3>
+          <ul class="skill-list">
+            <li>PCB Design (KiCad)</li>
+            <li>Sensors: GPS (NEO-6M), Camera (OV2640)</li>
+            <li>WS2812B / NeoPixel LEDs</li>
+            <li>3D Printing & Prototyping</li>
+            <li>Oscilloscope / Logic Analyzer</li>
+            <li>Robotics Systems</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VENTURES ===================== -->
+  <section id="ventures" class="section">
+    <div class="container">
+      <div class="section-label">03 / Ventures</div>
+      <h2 class="section-title">What I've Built</h2>
+      <div class="ventures-grid">
+
+        <div class="venture-card">
+          <div class="venture-icon venture-icon--green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="venture-name">PlastiBytes</h3>
+          <p class="venture-role">Co-Founder</p>
+          <p class="venture-desc">
+            A deep-tech startup using smart embedded hardware and machine learning to detect and catalog ocean plastic debris in real time — turning waste data into actionable cleanup intelligence.
+          </p>
+          <a href="https://plastibytes.com" target="_blank" rel="noopener" class="venture-link">plastibytes.com →</a>
+        </div>
+
+        <div class="venture-card">
+          <div class="venture-icon venture-icon--blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          </div>
+          <h3 class="venture-name">HWIVC</h3>
+          <p class="venture-role">Co-Founder</p>
+          <p class="venture-desc">
+            Hardware Innovation Valley Community — a platform that connects hardware engineers, makers, and innovators across Africa and beyond, fostering collaboration, mentorship, and access to tools.
+          </p>
+          <a href="https://hwivc.org" target="_blank" rel="noopener" class="venture-link">hwivc.org →</a>
+        </div>
+
+        <div class="venture-card">
+          <div class="venture-icon venture-icon--orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="venture-name">LEVON Robotics</h3>
+          <p class="venture-role">Co-Founder</p>
+          <p class="venture-desc">
+            Building next-generation robotics systems that combine intelligent sensing, autonomous navigation, and real-world problem solving — pushing the frontier of what machines can do.
+          </p>
+          <a href="#contact" class="venture-link">Coming Soon →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section id="projects" class="section section-alt">
+    <div class="container">
+      <div class="section-label">04 / Projects</div>
+      <h2 class="section-title">Featured Work</h2>
+      <div class="projects-grid">
+
+        <!-- PROJECT CARD — MarineSentinel -->
+        <div class="project-card featured">
+          <div class="project-header">
+            <div class="project-meta">
+              <span class="project-status status-active">Active</span>
+              <span class="project-year">2024–2025</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/YOUR_GITHUB/marine-sentinel" target="_blank" rel="noopener" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">MarineSentinel</h3>
+          <p class="project-desc">
+            An ESP32-S3 based marine debris detection buoy. Uses an OV2640 camera with Edge Impulse TFLite Micro for on-device ML inference, NEO-6M GPS for geotagging, WS2812B LEDs for status indication, and MQTT over WiFi for real-time cloud reporting.
+          </p>
+          <div class="project-tags">
+            <span class="tag">ESP32-S3</span>
+            <span class="tag">ESP-IDF</span>
+            <span class="tag">FreeRTOS</span>
+            <span class="tag">TFLite Micro</span>
+            <span class="tag">MQTT</span>
+            <span class="tag">Edge Impulse</span>
+          </div>
+        </div>
+
+        <!-- PROJECT CARD 2 — Placeholder, add your own -->
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-meta">
+              <span class="project-status status-complete">Complete</span>
+              <span class="project-year">2024</span>
+            </div>
+            <div class="project-links">
+              <a href="#" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">Project Name Here</h3>
+          <p class="project-desc">
+            Brief description of the project, what problem it solves, and what technologies it uses. Replace this placeholder with one of your real projects.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Tag 1</span>
+            <span class="tag">Tag 2</span>
+            <span class="tag">Tag 3</span>
+          </div>
+        </div>
+
+        <!-- PROJECT CARD 3 — Placeholder -->
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-meta">
+              <span class="project-status status-progress">In Progress</span>
+              <span class="project-year">2025</span>
+            </div>
+            <div class="project-links">
+              <a href="#" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">Another Project</h3>
+          <p class="project-desc">
+            Describe what this project does and why it matters. You can add as many cards as you need — just duplicate a project-card div and fill it in.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Tag 1</span>
+            <span class="tag">Tag 2</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align:center; margin-top:3rem;">
+        <a href="https://github.com/YOUR_GITHUB" target="_blank" rel="noopener" class="btn btn-outline">
+          View All on GitHub →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="section">
+    <div class="container contact-container">
+      <div class="section-label">05 / Contact</div>
+      <h2 class="section-title">Let's Build Something</h2>
+      <p class="contact-intro">
+        Whether you're looking to collaborate on a hardware project, bring me on as a consultant,<br />
+        or just want to talk embedded systems — my inbox is open.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:plastibytes@gmail.com" class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          plastibytes@gmail.com
+        </a>
+        <a href="https://plastibytes.com" target="_blank" rel="noopener" class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          plastibytes.com
+        </a>
+        <a href="https://hwivc.org" target="_blank" rel="noopener" class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          hwivc.org
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Asongna Brilan Nso Nkengafac</span>
+      <span class="footer-right">Built with HTML · CSS · JS · Hosted on GitHub Pages</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
