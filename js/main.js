@@ -93,6 +93,167 @@
     if (emptyEl) emptyEl.hidden = shown > 0;
   };
 
+  /* ================= Interactive layer ================= */
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* Scroll progress + back-to-top */
+  const progress = $('#progress'), toTop = $('#to-top');
+  let ticking = false;
+  const onScrollFx = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+    toTop.classList.toggle('show', scrollY > innerHeight * 0.9);
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); } }, { passive: true });
+  onScrollFx();
+  toTop.addEventListener('click', () => scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
+
+  /* Rotating headline words */
+  const rotator = $('#rotator');
+  if (rotator && !reduceMotion) {
+    const words = ['leaves the lab.', 'moves.', 'thinks.', 'ships.', 'scales.'];
+    let wi = 0;
+    setInterval(() => {
+      if (document.hidden) return;
+      // Keep at most one outgoing word; drop anything older
+      $$('.rotator-word:not(.is-in)', rotator).forEach(el => el.remove());
+      const old = $('.rotator-word.is-in', rotator);
+      wi = (wi + 1) % words.length;
+      const next = document.createElement('span');
+      next.className = 'rotator-word';
+      next.textContent = words[wi];
+      rotator.appendChild(next);
+      void next.offsetWidth; // commit the start state so the transition runs
+      next.classList.add('is-in');
+      if (old) { old.classList.remove('is-in'); old.classList.add('is-out'); }
+    }, 2800);
+  }
+
+  /* Count-up stats when they come into view */
+  const countUp = el => {
+    const target = +el.dataset.count;
+    if (reduceMotion) { el.textContent = target; return; }
+    const t0 = performance.now(), dur = 1400;
+    const step = t => {
+      const k = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - k, 4)));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    el.textContent = '0';
+    requestAnimationFrame(step);
+  };
+  const countObs = new IntersectionObserver(entries => entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    $$('[data-count]', en.target).forEach(countUp);
+    countObs.unobserve(en.target);
+  }), { threshold: 0.4 });
+  const stats = $('.hero-stats');
+  if (stats) countObs.observe(stats);
+
+  /* Card spotlight follows the pointer */
+  if (finePointer) {
+    document.addEventListener('pointermove', e => {
+      const card = e.target.closest && e.target.closest('.card');
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }, { passive: true });
+  }
+
+  /* Portrait: gentle 3D tilt toward the pointer */
+  const portrait = $('#portrait');
+  if (portrait && finePointer && !reduceMotion) {
+    portrait.addEventListener('pointermove', e => {
+      const r = portrait.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      portrait.style.setProperty('--ry', `${x * 10}deg`);
+      portrait.style.setProperty('--rx', `${-y * 10}deg`);
+    });
+    portrait.addEventListener('pointerleave', () => {
+      portrait.style.setProperty('--ry', '0deg');
+      portrait.style.setProperty('--rx', '0deg');
+    });
+  }
+  // Clicking the portrait jumps to the form and focuses it
+  portrait && portrait.addEventListener('click', () => setTimeout(() => $('#f-name').focus({ preventScroll: true }), 600));
+
+  /* Toast + copy to clipboard */
+  const toast = $('#toast');
+  let toastTimer;
+  const showToast = msg => {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  };
+  $$('[data-copy]').forEach(btn => btn.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(btn.dataset.copy); showToast('Email address copied'); }
+    catch (e) { showToast(btn.dataset.copy); }
+  }));
+
+  /* Hero canvas: circuit-board nodes that light up and connect near the pointer */
+  const canvas = $('#hero-canvas');
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    const hero = canvas.parentElement;
+    let W = 0, H = 0, dpr = 1, nodes = [], mouse = { x: -9999, y: -9999 }, running = false, raf = 0;
+    const GAP = 46, R = 150;
+    const color = () => getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#000';
+    let ink = color();
+    const resize = () => {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      W = hero.clientWidth; H = hero.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      nodes = [];
+      for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) {
+        nodes.push({ x, y, glow: 0, seed: Math.random() * Math.PI * 2 });
+      }
+      draw(performance.now());
+    };
+    const draw = t => {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = ink; ctx.strokeStyle = ink;
+      const near = [];
+      for (const n of nodes) {
+        const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
+        const target = d < R ? 1 - d / R : 0;
+        n.glow += (target - n.glow) * 0.12;
+        const idle = reduceMotion ? 0 : (Math.sin(t / 1400 + n.seed) + 1) * 0.02;
+        ctx.globalAlpha = 0.08 + idle + n.glow * 0.5;
+        ctx.beginPath(); ctx.arc(n.x, n.y, 1.1 + n.glow * 1.6, 0, Math.PI * 2); ctx.fill();
+        if (n.glow > 0.15) near.push(n);
+      }
+      // Right-angle "traces" between lit neighbours, like a PCB
+      ctx.lineWidth = 1;
+      for (const a of near) for (const b of near) {
+        if (b === a || b.x < a.x || (b.x === a.x && b.y <= a.y)) continue;
+        if (Math.abs(a.x - b.x) > GAP || Math.abs(a.y - b.y) > GAP) continue;
+        ctx.globalAlpha = Math.min(a.glow, b.glow) * 0.45;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    };
+    const loop = t => { draw(t); raf = running ? requestAnimationFrame(loop) : 0; };
+    const start = () => { if (!running && !reduceMotion) { running = true; raf = requestAnimationFrame(loop); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    hero.addEventListener('pointermove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      if (reduceMotion) draw(performance.now());
+    }, { passive: true });
+    hero.addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; if (reduceMotion) draw(performance.now()); });
+    new IntersectionObserver(([en]) => en.isIntersecting && !document.hidden ? start() : stop()).observe(hero);
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    new MutationObserver(() => { ink = color(); draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { ink = color(); });
+    let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
+    resize();
+  }
+
   /* ---------- Data ---------- */
   const load = path => fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : []).catch(() => []);
   const firstImg = item => (item.images && item.images[0]) || item.image || '';
@@ -212,6 +373,8 @@
 
   /* ---------- Render ---------- */
   Promise.all([load('data/projects.json'), load('data/achievements.json')]).then(([projects, achievements]) => {
+    const statP = $('#stat-projects');
+    if (statP && projects.length) { statP.dataset.count = projects.length; statP.textContent = projects.length; }
     const pGrid = $('#project-grid');
     pGrid.innerHTML = projects.map(projectCard).join('');
     observeReveal(pGrid);

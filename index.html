@@ -4,17 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Asongna Brilan — Hardware Developer</title>
+  <title>Asongna Brilan | Hardware Developer</title>
   <meta name="description"
-    content="Asongna Brilan — Hardware Developer and Co-founder of PlastiBytes. 6+ years in electronics, PCB design, firmware, CAD and edge computing for robotics and product development in Cameroon and Africa." />
+    content="Asongna Brilan, Hardware Developer and Co-founder of PlastiBytes. 6+ years in electronics, PCB design, firmware, CAD and edge computing for robotics and product development in Cameroon and Africa." />
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-  <meta property="og:title" content="Asongna Brilan — Hardware Developer" />
+  <meta property="og:title" content="Asongna Brilan | Hardware Developer" />
   <meta property="og:description" content="Hardware Developer & Co-founder of PlastiBytes. Building hardware in Cameroon, for Africa." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://asongnabrilan-nso.github.io/portfolio/" />
   <meta property="og:image" content="https://asongnabrilan-nso.github.io/portfolio/assets/Brilan.jpg" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='-apple-system,Helvetica,Arial' font-weight='700' font-size='28' fill='%23fff'%3EAB%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script>
     document.documentElement.classList.add('js');
@@ -27,9 +30,10 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ===================== NAV (translucent material) ===================== -->
+  <div class="progress" id="progress" aria-hidden="true"></div>
   <header class="nav" id="nav">
     <div class="nav-inner">
-      <a href="#top" class="nav-logo" aria-label="Asongna Brilan — home">Asongna Brilan</a>
+      <a href="#top" class="nav-logo" aria-label="Asongna Brilan, home"><span class="logo-mark" aria-hidden="true">AB</span><span class="logo-text">Asongna Brilan</span></a>
       <nav aria-label="Primary">
         <ul class="nav-links" id="nav-links">
           <li><a href="#about">About</a></li>
@@ -57,40 +61,70 @@
 
     <!-- ===================== HERO ===================== -->
     <section class="hero" id="top">
-      <div class="container hero-inner">
-        <p class="eyebrow reveal">Hardware Developer · Co-founder, PlastiBytes</p>
-        <h1 class="display reveal">Hardware that<br />leaves the lab.</h1>
-        <p class="lead reveal">
-          I'm Asongna Brilan — a hardware engineer building robots and real products in Cameroon,
-          for Africa. Electronics, PCBs, firmware, CAD and edge computing, from first sketch to shipped unit.
-        </p>
-        <div class="hero-cta reveal">
-          <a href="#projects" class="btn btn-primary">See my work</a>
-          <a href="#contact" class="btn btn-ghost">Write to me <span aria-hidden="true">→</span></a>
+      <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="pill reveal"><span class="pill-dot" aria-hidden="true"></span>Open to collaborations and new projects</p>
+          <h1 class="display reveal" aria-label="Hardware that leaves the lab.">
+            <span aria-hidden="true">Hardware that<br /><span class="rotator" id="rotator"><span class="rotator-word is-in">leaves the lab.</span></span></span>
+          </h1>
+          <p class="lead reveal">
+            I'm <strong>Asongna Brilan</strong>, a hardware engineer and Co&#8209;founder of PlastiBytes, building robots
+            and real products in Cameroon, for Africa.
+          </p>
+          <div class="hero-cta reveal">
+            <a href="#projects" class="btn btn-primary">Explore my work</a>
+            <a href="#contact" class="btn btn-ghost">Leave me a message <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
         </div>
+
+        <div class="hero-portrait reveal">
+          <a href="#contact" class="portrait" id="portrait" aria-label="Nice connecting with you. Leave me a message.">
+            <span class="orbit orbit-1" aria-hidden="true"><i></i></span>
+            <span class="orbit orbit-2" aria-hidden="true"><i></i></span>
+            <span class="portrait-frame">
+              <img src="assets/Brilan.jpg" alt="Portrait of Asongna Brilan" width="560" height="560" />
+              <span class="portrait-hover" aria-hidden="true">
+                <span class="ph-title">Nice connecting with you!</span>
+                <span class="ph-sub">Leave me a message <span class="arrow">→</span></span>
+              </span>
+            </span>
+          </a>
+          <p class="portrait-note" aria-hidden="true">Nice connecting with you. Tap to leave me a message.</p>
+        </div>
+      </div>
+
+      <div class="container">
         <ul class="hero-stats reveal" aria-label="At a glance">
-          <li><strong>6+</strong><span>years in hardware</span></li>
-          <li><strong>Co-founder</strong><span>PlastiBytes</span></li>
-          <li><strong>Lead team</strong><span>HWIVC community</span></li>
+          <li><strong><span data-count="6">6</span>+</strong><span>Years building hardware</span></li>
+          <li><strong><span data-count="4" id="stat-projects">4</span></strong><span>Featured projects</span></li>
+          <li><strong><span data-count="4">4</span></strong><span>Core disciplines</span></li>
+          <li><strong><span data-count="2">2</span></strong><span>Ventures &amp; communities</span></li>
         </ul>
       </div>
+      <a href="#about" class="scroll-cue" aria-label="Scroll to About"><span></span></a>
     </section>
 
     <!-- ===================== ABOUT ===================== -->
     <section id="about" class="section">
       <div class="container about-grid">
-        <figure class="about-photo reveal">
-          <img src="assets/Brilan.jpg" alt="Portrait of Asongna Brilan" width="560" height="700" loading="lazy" />
-        </figure>
+        <div class="about-side">
+          <p class="eyebrow reveal"><span class="eyebrow-num">01</span>About</p>
+          <h2 class="title reveal">Engineer.<br />Founder.<br />Community builder.</h2>
+          <dl class="facts reveal">
+            <div><dt>Based in</dt><dd>Buea, Cameroon</dd></div>
+            <div><dt>Experience</dt><dd>6+ years in hardware</dd></div>
+            <div><dt>Focus</dt><dd>Robotics &amp; product development</dd></div>
+            <div><dt>Company</dt><dd><a href="https://plastibytes.com" target="_blank" rel="noopener">PlastiBytes</a></dd></div>
+          </dl>
+        </div>
         <div class="about-copy">
-          <p class="eyebrow reveal">About</p>
-          <h2 class="title reveal">Engineer. Founder.<br />Community builder.</h2>
-          <div class="prose reveal">
+          <div class="prose prose-lg reveal">
             <p>
               I'm <strong>Asongna Brilan Nso Nkengafac</strong>, a Hardware Developer based in Buea, Cameroon,
               with more than six years of experience turning ideas into working electronics. My work sits
               where <strong>robotics</strong> and <strong>product development</strong> meet: designing the circuit,
-              laying out the PCB, writing the firmware, modelling the enclosure, and putting intelligence at the edge.
+              laying out the PCB, writing the firmware, modelling the enclosure and putting intelligence at the edge.
             </p>
             <p>
               I'm the <strong>Co-founder of PlastiBytes</strong>, a manufacturing and product development startup
@@ -103,14 +137,15 @@
               I believe Africa's next wave of technology will be built here, by people who understand the problems first-hand.
             </p>
           </div>
-          <dl class="facts reveal">
-            <div><dt>Based in</dt><dd>Buea, Cameroon</dd></div>
-            <div><dt>Focus</dt><dd>Robotics &amp; product development</dd></div>
-            <div><dt>Company</dt><dd><a href="https://plastibytes.com" target="_blank" rel="noopener">PlastiBytes</a></dd></div>
-            <div><dt>Community</dt><dd><a href="https://hwivc.org" target="_blank" rel="noopener">HWIVC</a></dd></div>
-          </dl>
+          <ol class="process reveal" aria-label="How I work">
+            <li><span>01</span><strong>Idea</strong><em>Requirements &amp; architecture</em></li>
+            <li><span>02</span><strong>Prototype</strong><em>Circuit, PCB &amp; firmware</em></li>
+            <li><span>03</span><strong>Refine</strong><em>CAD, testing &amp; edge AI</em></li>
+            <li><span>04</span><strong>Product</strong><em>Manufacture &amp; ship</em></li>
+          </ol>
           <div class="about-cta reveal">
             <a href="#contact" class="btn btn-primary">Work with me</a>
+            <a href="assets/Asongna-Brilan-Resume.pdf" class="btn btn-ghost" download>Download résumé</a>
             <a href="https://www.linkedin.com/in/asongna-brilan-16b862209/" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn <span aria-hidden="true">↗</span></a>
           </div>
         </div>
@@ -121,7 +156,7 @@
     <section id="expertise" class="section section-alt">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">Expertise</p>
+          <p class="eyebrow reveal"><span class="eyebrow-num">02</span>Expertise</p>
           <h2 class="title reveal">Everything a device needs<br />to come alive.</h2>
           <p class="section-lead reveal">Four disciplines, one workflow, applied across robotics and consumer and industrial products.</p>
         </header>
@@ -166,7 +201,7 @@
     <section id="ventures" class="section">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">Ventures &amp; Community</p>
+          <p class="eyebrow reveal"><span class="eyebrow-num">03</span>Ventures &amp; Community</p>
           <h2 class="title reveal">Building the ecosystem,<br />not just the device.</h2>
         </header>
         <div class="cards cards-2">
@@ -202,7 +237,7 @@
     <section id="projects" class="section section-alt">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">Projects</p>
+          <p class="eyebrow reveal"><span class="eyebrow-num">04</span>Projects</p>
           <h2 class="title reveal">Selected work.</h2>
           <p class="section-lead reveal">Projects I've led, and projects I've built alongside other teams.</p>
         </header>
@@ -232,7 +267,7 @@
     <section id="achievements" class="section" hidden>
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">Achievements</p>
+          <p class="eyebrow reveal"><span class="eyebrow-num">05</span>Achievements</p>
           <h2 class="title reveal">Awards &amp; certificates.</h2>
           <p class="section-lead reveal">Recognition for the work, and the training behind it.</p>
         </header>
@@ -250,7 +285,7 @@
     <section id="contact" class="section">
       <div class="container contact-grid">
         <div class="contact-info">
-          <p class="eyebrow reveal">Contact</p>
+          <p class="eyebrow reveal"><span class="eyebrow-num">06</span>Contact</p>
           <h2 class="title reveal">Let's build<br />something real.</h2>
           <p class="section-lead reveal">
             Hardware project, product idea, partnership or speaking invitation: write to me directly and I'll get back to you.
@@ -268,8 +303,8 @@
           </div>
 
           <ul class="contact-list reveal">
-            <li><span>Email</span><a href="mailto:b.asongna@plastibytes.com">b.asongna@plastibytes.com</a></li>
-            <li><span>Company</span><a href="mailto:info@plastibytes.com">info@plastibytes.com</a></li>
+            <li><span>Email</span><span class="copy-wrap"><a href="mailto:b.asongna@plastibytes.com">b.asongna@plastibytes.com</a><button class="copy-btn" data-copy="b.asongna@plastibytes.com" aria-label="Copy b.asongna@plastibytes.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg></button></span></li>
+            <li><span>Company</span><span class="copy-wrap"><a href="mailto:info@plastibytes.com">info@plastibytes.com</a><button class="copy-btn" data-copy="info@plastibytes.com" aria-label="Copy info@plastibytes.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg></button></span></li>
             <li><span>Website</span><a href="https://plastibytes.com" target="_blank" rel="noopener">plastibytes.com</a></li>
             <li><span>Community</span><a href="https://hwivc.org" target="_blank" rel="noopener">hwivc.org</a></li>
             <li><span>Social</span>
@@ -322,6 +357,11 @@
       <span>Buea, Cameroon · <a href="https://plastibytes.com" target="_blank" rel="noopener">PlastiBytes</a> · <a href="https://hwivc.org" target="_blank" rel="noopener">HWIVC</a></span>
     </div>
   </footer>
+
+  <button class="to-top" id="to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+  </button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Detail sheet (projects & achievements) -->
   <div class="sheet-scrim" id="sheet-scrim" hidden></div>
