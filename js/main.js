@@ -514,6 +514,7 @@
 
     const data = Object.fromEntries(new FormData(form));
     if (!data._subject) data._subject = `Portfolio message from ${data.name}`;
+    if (data.work_mode) data._subject += ` [${data.work_mode}]`;
     data._replyto = data.email;
     const mail = `mailto:b.asongna@plastibytes.com?subject=${encodeURIComponent(data._subject)}&body=${encodeURIComponent(data.message)}`;
 

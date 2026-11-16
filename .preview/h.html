@@ -1,0 +1,10 @@
+<!doctype html><html><body style="margin:0">
+<iframe id="f" style="border:0;display:block"></iframe>
+<script>
+const p=new URLSearchParams(location.search),w=+p.get('w'),h=+p.get('h'),f=document.getElementById('f');
+f.src='/';f.style.width=w+'px';f.style.height=h+'px';const errs=[];
+f.addEventListener('load',()=>{const W=f.contentWindow,d=f.contentDocument;W.addEventListener('error',e=>errs.push(e.message));
+if(p.get('theme'))d.documentElement.dataset.theme=p.get('theme');
+const s=d.createElement('style');s.textContent='.reveal{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}*{transition:none!important}html{scroll-behavior:auto!important}.hero{min-height:'+h+'px!important}';d.head.appendChild(s);
+setTimeout(()=>{if(p.get('full'))f.style.height=d.documentElement.scrollHeight+'px';if(p.get('to'))d.querySelector(p.get('to')).scrollIntoView();setTimeout(()=>{document.title='sw='+d.documentElement.scrollWidth+' errs='+JSON.stringify(errs)},400)},2000);});
+</script></body></html>

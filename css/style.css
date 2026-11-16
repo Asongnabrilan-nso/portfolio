@@ -1264,3 +1264,73 @@ a:hover > .arrow, .btn:hover .arrow { transform: translateX(4px); }
   background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 68% no-repeat;
   box-shadow: inset 0 0 0 1.5px var(--text);
 }
+
+/* =====================================================================
+   TYPOGRAPHY & ALIGNMENT PASS
+   One left edge per column, consistent measure, rhythm and card rows
+   ===================================================================== */
+:root { --measure: 62ch; --measure-narrow: 46ch; }
+
+/* Paragraph rhythm */
+p { hanging-punctuation: first; }
+.prose { max-width: var(--measure); }
+.prose p + p { margin-top: 0; }
+.lead { max-width: 46ch; }
+.section-lead { max-width: var(--measure-narrow); }
+
+/* Section headers: label, title and summary on a single left edge */
+.section-head { display: block; max-width: 760px; }
+.section-head .eyebrow { display: flex; width: max-content; }
+.section-head .title { max-width: 20ch; }
+.section-head .section-lead { margin-top: 1.1rem; max-width: var(--measure-narrow); padding: 0; }
+
+/* Cards: equal rows so titles, text and tags line up across a row */
+.cards { align-items: stretch; }
+.skill { display: grid; grid-template-rows: auto 3.3rem 1fr auto; row-gap: .85rem; }
+.skill h3 { align-self: start; line-height: 1.3; }
+.skill-icon { margin-bottom: .1rem; }
+.skill p { align-self: start; }
+.skill .chips { margin-top: 0; padding-top: .25rem; align-self: end; }
+.project .card-content, .ach .card-content { height: 100%; }
+.project h3, .ach h3 { line-height: 1.3; }
+.project .chips, .ach .chips { margin-top: auto; }
+.project-links { padding-top: .25rem; }
+
+/* About: facts in a tidy 2x2 grid, process aligned with prose */
+.facts { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.facts dd { line-height: 1.35; }
+.process { max-width: var(--measure); }
+.about-cta { max-width: var(--measure); }
+
+/* Contact: label column + left-aligned values */
+.contact-list li {
+  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); align-items: center; gap: 1rem;
+}
+.contact-list a, .contact-list .copy-wrap, .socials { justify-self: start; text-align: left; }
+.contact-grid { align-items: start; }
+.contact-info .section-lead { max-width: var(--measure-narrow); }
+.remote-list { max-width: var(--measure-narrow); }
+.remote-list li { align-items: flex-start; line-height: 1.4; }
+.remote-list li::before { margin-top: .1rem; }
+
+/* Form select matches inputs */
+.field select {
+  width: 100%; font: inherit; font-size: 1rem; color: var(--text); background: var(--bg);
+  border: var(--bw) solid var(--text); border-radius: var(--radius-sm); padding: .8rem 2.5rem .8rem .95rem;
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text) 50%), linear-gradient(135deg, var(--text) 50%, transparent 50%);
+  background-position: calc(100% - 1.25rem) 55%, calc(100% - .9rem) 55%;
+  background-size: .4rem .4rem; background-repeat: no-repeat;
+}
+.field select:focus { outline: none; box-shadow: 0 0 0 3px var(--accent); }
+
+/* Footer columns share a top line */
+.footer-grid { align-items: start; }
+
+@media (max-width: 1024px) {
+  .skill { grid-template-rows: auto auto 1fr auto; }
+}
+@media (max-width: 600px) {
+  .contact-list li { grid-template-columns: 1fr; gap: .2rem; }
+  .facts { grid-template-columns: 1fr 1fr; }
+}
