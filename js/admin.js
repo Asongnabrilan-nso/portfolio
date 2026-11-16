@@ -14,6 +14,8 @@
   const JPEG_Q = 0.85;
   const MAX_PDF_MB = 15;          // size limit for certificate PDFs
   const MAX_PDF_PAGES = 10;       // pages converted to view-only pictures
+  const WATERMARK = 'Asongna Brilan · Portfolio · View only';
+  const WATERMARK_SITE = 'asongnabrilan-nso.github.io/portfolio';
 
   const COLS = {
     projects: { file: 'data/projects.json', dir: 'assets/projects', noun: 'project', multiImage: true },
@@ -239,7 +241,7 @@
   }
   const linkRow = (l = {}) => `<div class="link-row"><input placeholder="Label (e.g. GitHub)" value="${esc(l.label)}" data-k="label"><input type="url" placeholder="https://" value="${esc(l.url)}" data-k="url"><button type="button" class="icon-btn" data-rm-link aria-label="Remove link">✕</button></div>`;
   const linksField = links => `<div class="field"><label>Links</label><div class="links-editor" id="links">${links.map(linkRow).join('')}</div><button type="button" class="btn btn-ghost btn-sm" id="add-link" style="justify-self:start">+ Add link</button></div>`;
-  const certField = () => `<div class="field"><label>Certificate (view only)</label><div class="img-grid" id="imgs"></div><p class="hint">Drop the certificate <b>PDF</b> (up to ${MAX_PDF_MB} MB). Each page is turned into a view-only picture; <b>the PDF itself is never uploaded</b>, so visitors can view it but get no file to download. You can also add photos or screenshots.</p></div>`;
+  const certField = () => `<div class="field"><label>Certificate (view only)</label><div class="img-grid" id="imgs"></div><p class="hint">Drop the certificate <b>PDF</b> (up to ${MAX_PDF_MB} MB). Each page is turned into a view-only picture stamped with your name as a watermark; <b>the PDF itself is never uploaded</b>, so visitors can view it but get no file to download. You can also add photos or screenshots.</p></div>`;
   const imagesField = multi => `<div class="field"><label>${multi ? 'Pictures' : 'Picture of the award / certificate'}</label><div class="img-grid" id="imgs"></div><p class="hint">${multi ? 'The first picture is the cover. ' : ''}Images are resized to ${MAX_IMG}px and uploaded when you save.</p></div>`;
 
   function renderImages() {
@@ -303,7 +305,7 @@
     }
     for (const file of [...files].filter(f => f.type.startsWith('image/'))) {
       try {
-        editing.images.push({ dataUrl: await resize(file), name: file.name });
+        editing.images.push({ dataUrl: await resize(file, !!COLS[state.col].acceptPdf), name: file.name });
         if (!multi) break;
       } catch (err) { setStatus($('#edit-status'), `Couldn't read ${file.name}.`, 'err'); }
     }
@@ -350,13 +352,48 @@
       const ctx = c.getContext('2d');
       ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
       await page.render({ canvasContext: ctx, viewport }).promise;
+      watermark(ctx, c.width, c.height);
       pages.push(c.toDataURL('image/jpeg', JPEG_Q));
     }
     const total = doc.numPages;
     doc.destroy();
     return { pages, total };
   }
-  function resize(file) {
+  // Watermark baked into certificate pictures: a light diagonal pattern plus a clear label.
+  // It is part of the image itself, so screenshots and copies carry it too.
+  function watermark(ctx, w, h) {
+    const size = Math.max(14, Math.round(Math.min(w, h) / 28));
+    ctx.save();
+    // 1) Diagonal repeating text, light enough to keep the certificate readable
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(-Math.PI / 6);
+    ctx.font = `600 ${size}px Inter, "Segoe UI", Arial, sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const diag = Math.hypot(w, h);
+    const stepY = size * 7, text = WATERMARK + '     ';
+    const stepX = ctx.measureText(text).width;
+    for (let y = -diag / 2, row = 0; y < diag / 2; y += stepY, row++) {
+      for (let x = -diag / 2 - (row % 2) * stepX / 2; x < diag / 2 + stepX; x += stepX) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)'; ctx.fillText(text, x, y);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.07)'; ctx.fillText(text, x + 1, y + 1); // visible on dark areas too
+      }
+    }
+    ctx.restore();
+    // 2) Solid label in the bottom-right corner
+    ctx.save();
+    const fs = Math.max(12, Math.round(size * 0.8)), pad = Math.round(fs * 0.7);
+    ctx.font = `700 ${fs}px Inter, "Segoe UI", Arial, sans-serif`;
+    const label = `${WATERMARK} · ${WATERMARK_SITE}`;
+    const tw = ctx.measureText(label).width;
+    const bw = Math.min(w - pad * 2, tw + pad * 2), bh = fs + pad * 1.4;
+    const bx = w - bw - pad, by = h - bh - pad;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = '#ffffff'; ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+    ctx.fillText(label, bx + bw - pad, by + bh / 2, bw - pad * 2);
+    ctx.restore();
+  }
+  function resize(file, stamp = false) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
@@ -366,6 +403,7 @@
         const ctx = c.getContext('2d');
         ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
         ctx.drawImage(img, 0, 0, c.width, c.height);
+        if (stamp) watermark(ctx, c.width, c.height);
         URL.revokeObjectURL(img.src);
         resolve(c.toDataURL('image/jpeg', JPEG_Q));
       };

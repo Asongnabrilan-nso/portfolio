@@ -114,6 +114,9 @@ to browse. The editor converts each page (up to 10) into a picture in your brows
 uploaded**, so there is no file on the site or in the repository for anyone to download. Wait for
 *"Converted N pages to view-only pictures"* before saving (the Save button is paused while it works).
 Page 1 becomes the card cover. You can also add photos or screenshots.
+Every certificate picture (PDF pages and photos) is stamped with a watermark: a light diagonal
+*"Asongna Brilan · Portfolio · View only"* pattern plus a label with the site address, so copies and screenshots carry your name.
+To change the wording, edit `WATERMARK` and `WATERMARK_SITE` near the top of `js/admin.js` (applies to new uploads).
 
 On the site, visitors see the certificate on the card and can open it to view every page (swipe, or use the
 ‹ › arrows). There are no download or PDF links, and right-click saving and image dragging are blocked.
