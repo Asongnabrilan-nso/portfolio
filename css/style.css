@@ -805,3 +805,158 @@ a:hover > .arrow, .btn:hover .arrow { transform: translateX(4px); }
   .portrait { transform: none !important; }
   .ph-title, .ph-sub { transform: none; filter: none; }
 }
+
+/* =====================================================================
+   Modern web design layer (2024-25 patterns)
+   Fluid tokens · elevation · micro-interactions · scrollytelling ·
+   cursor UX · skeletons · view transitions · a11y hardening
+   ===================================================================== */
+:root {
+  /* Fluid type scale */
+  --fs-xs: clamp(.75rem, .72rem + .15vw, .8125rem);
+  --fs-sm: clamp(.8125rem, .78rem + .2vw, .9375rem);
+  --fs-body: clamp(1rem, .96rem + .2vw, 1.0625rem);
+  --fs-lg: clamp(1.0625rem, 1rem + .35vw, 1.25rem);
+  /* Fluid spacing scale */
+  --space-xs: clamp(.5rem, .4rem + .5vw, .75rem);
+  --space-sm: clamp(.75rem, .6rem + .75vw, 1.125rem);
+  --space-md: clamp(1rem, .8rem + 1vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+  /* Elevation */
+  --elevation-1: 0 1px 3px rgba(0, 0, 0, .08);
+  --elevation-2: 0 4px 12px rgba(0, 0, 0, .08);
+  --elevation-3: 0 12px 28px rgba(0, 0, 0, .12);
+  /* Timing */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* AAA contrast for secondary text in light mode */
+:root:not([data-theme="dark"]) { --text-2: #515154; --text-3: #6a6a6f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --text-2: #a1a1a6; --text-3: #8e8e93; } }
+:root[data-theme="dark"] { --text-2: #a1a1a6; --text-3: #8e8e93; }
+
+/* Stronger, consistent focus ring */
+:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* ---------- Micro-interactions ---------- */
+@media (hover: hover) {
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary:hover { box-shadow: var(--elevation-3); }
+}
+.btn:active { transform: scale(.95); }
+.magnetic { will-change: transform; }
+
+/* Touch targets: 44px minimum on touch screens */
+@media (pointer: coarse) {
+  .icon-btn, .copy-btn { width: 2.75rem; height: 2.75rem; }
+  .btn-sm { min-height: 2.75rem; }
+  .project-links a, .project-links .more { padding-block: .5rem; }
+}
+
+/* Form success state */
+.form-status.ok { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; }
+.form-status.ok::before {
+  content: ""; width: 1.25rem; height: 1.25rem; border-radius: 50%; flex-shrink: 0;
+  background: var(--text) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 70% no-repeat;
+  animation: pop-in .5s var(--spring-bounce);
+}
+:root[data-theme="dark"] .form-status.ok::before { filter: invert(1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .form-status.ok::before { filter: invert(1); } }
+@keyframes pop-in { from { transform: scale(0); } }
+
+/* ---------- Scrollytelling ---------- */
+/* Headline wipe: titles reveal top-to-bottom with a clip-path */
+.js .title.reveal { clip-path: inset(0 0 100% 0); transition: clip-path 1s var(--spring), opacity .8s var(--spring), transform .9s var(--spring), filter .8s var(--spring); }
+.js .title.reveal.in { clip-path: inset(0 0 -10% 0); }
+
+/* Hero eases away as you scroll past it (scroll-linked, no scroll hijacking) */
+.hero-copy, .hero-portrait { transition: none; }
+.hero.is-scrolling .hero-copy {
+  transform: translateY(calc(var(--hero-p, 0) * -60px));
+  opacity: calc(1 - var(--hero-p, 0) * 1.1);
+}
+.hero.is-scrolling .hero-portrait { transform: translateY(calc(var(--hero-p, 0) * -30px)) scale(calc(1 - var(--hero-p, 0) * .08)); }
+
+/* Process line fills as the section scrolls through */
+.process::after {
+  content: ""; position: absolute; left: 1.2rem; top: 1.2rem; height: 2px; margin-top: -.5px;
+  width: calc((100% - 2.4rem) * var(--process-p, 0)); background: var(--text); border-radius: 2px;
+}
+.process li.lit span { background: var(--invert-bg); color: var(--invert-text); }
+
+/* ---------- Cursor UX (fine pointers only, set by JS) ---------- */
+.cursor-dot, .cursor-ring {
+  position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; border-radius: 50%;
+  opacity: 0; transition: opacity .3s ease;
+}
+.has-cursor .cursor-dot, .has-cursor .cursor-ring { opacity: 1; }
+.cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--text); }
+.cursor-ring {
+  width: 36px; height: 36px; margin: -18px 0 0 -18px;
+  box-shadow: inset 0 0 0 1.5px var(--text); opacity: 0;
+  display: grid; place-items: center;
+  transition: width .35s var(--spring), height .35s var(--spring), margin .35s var(--spring),
+    background-color .3s ease, box-shadow .3s ease, opacity .3s ease;
+}
+.has-cursor .cursor-ring { opacity: .45; }
+.cursor-ring span {
+  font-size: .6875rem; font-weight: 600; letter-spacing: .01em; color: var(--invert-text);
+  opacity: 0; transform: scale(.6); transition: opacity .2s ease, transform .35s var(--spring);
+}
+.cursor-hover .cursor-ring { width: 56px; height: 56px; margin: -28px 0 0 -28px; opacity: .3; }
+.cursor-label .cursor-ring {
+  width: 76px; height: 76px; margin: -38px 0 0 -38px; opacity: 1;
+  background: var(--text); box-shadow: none;
+}
+.cursor-label .cursor-ring span { opacity: 1; transform: none; }
+.cursor-label .cursor-dot, .cursor-down .cursor-dot { opacity: 0; }
+.cursor-down .cursor-ring { width: 28px; height: 28px; margin: -14px 0 0 -14px; }
+
+/* ---------- Skeleton loading ---------- */
+.skeleton { pointer-events: none; }
+.skeleton .sk {
+  border-radius: 8px; background: var(--chip);
+  background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface) 70%, transparent), transparent);
+  background-size: 200% 100%; animation: shimmer 1.4s linear infinite;
+}
+.sk-line { height: .85rem; }
+.sk-title { height: 1.4rem; width: 60%; }
+.sk-chip { height: 1.5rem; width: 4.5rem; border-radius: 999px !important; }
+.skeleton .card-content { gap: .75rem; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ---------- View transition: circular theme reveal ---------- */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: theme-reveal .6s var(--spring); }
+@keyframes theme-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0%)); }
+  to { clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 0%)); }
+}
+
+/* ---------- Glass depth for floating chips ---------- */
+.hero-stats {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: var(--space-lg); box-shadow: var(--elevation-2);
+}
+
+/* ---------- Global motion safety net ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; scroll-behavior: auto !important;
+  }
+  .js .title.reveal { clip-path: none; }
+  .hero.is-scrolling .hero-copy, .hero.is-scrolling .hero-portrait { transform: none; opacity: 1; }
+  .cursor-dot, .cursor-ring { display: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hero-stats { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+.hero.is-scrolling .hero-portrait.in, .hero.is-scrolling .hero-copy > .reveal.in { transition: opacity .8s var(--spring), filter .8s var(--spring); }
+.process span { position: relative; z-index: 1; }

@@ -17,14 +17,28 @@
 
   /* ---------- Theme ---------- */
   const root = document.documentElement;
-  $('#theme-toggle').addEventListener('click', () => {
+  $('#theme-toggle').addEventListener('click', e => {
     const current = root.dataset.theme ||
       (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const next = current === 'dark' ? 'light' : 'dark';
-    root.classList.add('theme-fade');
-    root.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch (e) { /* storage blocked */ }
-    setTimeout(() => root.classList.remove('theme-fade'), 400);
+    const apply = () => {
+      root.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (err) { /* storage blocked */ }
+    };
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !calm) {
+      // Circular reveal that grows from the toggle button (View Transitions API)
+      const r = e.currentTarget.getBoundingClientRect();
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      root.style.setProperty('--vt-x', x + 'px');
+      root.style.setProperty('--vt-y', y + 'px');
+      root.style.setProperty('--vt-r', Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 'px');
+      document.startViewTransition(apply);
+    } else {
+      root.classList.add('theme-fade');
+      apply();
+      setTimeout(() => root.classList.remove('theme-fade'), 400);
+    }
   });
 
   /* ---------- Nav ---------- */
@@ -96,6 +110,9 @@
   /* ================= Interactive layer ================= */
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // Simplify effects on low-end devices or when the user asked to save data
+  const conn = navigator.connection || {};
+  const lowEnd = !!conn.saveData || (navigator.hardwareConcurrency || 8) <= 2 || (navigator.deviceMemory || 8) <= 2;
 
   /* Scroll progress + back-to-top */
   const progress = $('#progress'), toTop = $('#to-top');
@@ -196,7 +213,7 @@
 
   /* Hero canvas: circuit-board nodes that light up and connect near the pointer */
   const canvas = $('#hero-canvas');
-  if (canvas && canvas.getContext) {
+  if (canvas && canvas.getContext && !lowEnd) {
     const ctx = canvas.getContext('2d');
     const hero = canvas.parentElement;
     let W = 0, H = 0, dpr = 1, nodes = [], mouse = { x: -9999, y: -9999 }, running = false, raf = 0;
@@ -254,6 +271,75 @@
     resize();
   }
 
+  /* Scroll-linked storytelling: hero eases away, process line fills */
+  const heroEl = $('.hero');
+  const process = $('.process');
+  const processSteps = process ? $$('li', process) : [];
+  if (!reduceMotion) {
+    heroEl.classList.add('is-scrolling');
+    const scrollStory = () => {
+      const p = Math.min(1, Math.max(0, scrollY / (heroEl.offsetHeight * 0.8)));
+      heroEl.style.setProperty('--hero-p', p.toFixed(3));
+      if (process) {
+        const r = process.getBoundingClientRect();
+        const k = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (innerHeight * 0.5)));
+        process.style.setProperty('--process-p', k.toFixed(3));
+        processSteps.forEach((li, i) => li.classList.toggle('lit', k >= i / (processSteps.length - 1) - 0.001));
+      }
+    };
+    let storyTick = false;
+    addEventListener('scroll', () => { if (!storyTick) { storyTick = true; requestAnimationFrame(() => { scrollStory(); storyTick = false; }); } }, { passive: true });
+    scrollStory();
+  } else if (process) {
+    process.style.setProperty('--process-p', 1);
+    processSteps.forEach(li => li.classList.add('lit'));
+  }
+
+  /* Magnetic buttons: pulled slightly toward the cursor */
+  if (finePointer && !reduceMotion) {
+    $$('.btn-primary, .nav-cta, .to-top, .theme-mag').forEach(el => {
+      el.classList.add('magnetic');
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) * 0.25, y = (e.clientY - r.top - r.height / 2) * 0.35;
+        el.style.translate = `${x}px ${y}px`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.translate = ''; });
+    });
+  }
+
+  /* Custom cursor: dot + eased ring, grows on links, shows labels on [data-cursor] */
+  if (finePointer && !reduceMotion && !lowEnd) {
+    const dot = document.createElement('div'), ring = document.createElement('div');
+    dot.className = 'cursor-dot'; ring.className = 'cursor-ring';
+    dot.setAttribute('aria-hidden', 'true'); ring.setAttribute('aria-hidden', 'true');
+    const label = document.createElement('span'); ring.appendChild(label);
+    document.body.append(dot, ring);
+    let mx = -100, my = -100, rx = -100, ry = -100, shown = false;
+    const body = document.body;
+    addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      if (!shown) { shown = true; rx = mx; ry = my; body.classList.add('has-cursor'); }
+      const t = e.target.closest ? e.target : null;
+      const labelled = t && t.closest('[data-cursor]');
+      const interactive = t && t.closest('a, button, input, textarea, select, label, [role="tab"]');
+      body.classList.toggle('cursor-label', !!labelled);
+      body.classList.toggle('cursor-hover', !labelled && !!interactive);
+      if (labelled) label.textContent = labelled.dataset.cursor;
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { shown = false; body.classList.remove('has-cursor'); });
+    addEventListener('pointerdown', () => body.classList.add('cursor-down'));
+    addEventListener('pointerup', () => body.classList.remove('cursor-down'));
+    const follow = () => {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+      requestAnimationFrame(follow);
+    };
+    requestAnimationFrame(follow);
+  }
+
   /* ---------- Data ---------- */
   const load = path => fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : []).catch(() => []);
   const firstImg = item => (item.images && item.images[0]) || item.image || '';
@@ -261,7 +347,7 @@
   /* ---------- Projects ---------- */
   const statusClass = s => 'status-' + String(s || '').toLowerCase().replace(/\s+/g, '-');
   const projectCard = (p, i) => `
-    <article class="card project reveal${p.featured ? ' featured' : ''}${firstImg(p) ? ' has-media' : ''}" data-type="${esc(p.type)}">
+    <article class="card project reveal${p.featured ? ' featured' : ''}${firstImg(p) ? ' has-media' : ''}" data-type="${esc(p.type)}" data-cursor="View">
       ${firstImg(p) ? `<div class="card-media"><img src="${esc(safeUrl(firstImg(p)))}" alt="" loading="lazy"></div>` : ''}
       <div class="card-content">
         <div class="project-meta">
@@ -286,7 +372,7 @@
     return isNaN(dt) ? d : dt.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
   };
   const achCard = (a, i) => `
-    <article class="card ach reveal${a.image ? ' has-media' : ''}" data-type="${esc(a.type)}">
+    <article class="card ach reveal${a.image ? ' has-media' : ''}" data-type="${esc(a.type)}" data-cursor="View">
       ${a.image ? `<div class="card-media ach-media"><img src="${esc(safeUrl(a.image))}" alt="" loading="lazy"></div>` : `
         <div class="ach-icon" aria-hidden="true">${a.type === 'award'
           ? '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 21.5l5-2.5 5 2.5-1.5-8"/></svg>'
@@ -377,6 +463,7 @@
     if (statP && projects.length) { statP.dataset.count = projects.length; statP.textContent = projects.length; }
     const pGrid = $('#project-grid');
     pGrid.innerHTML = projects.map(projectCard).join('');
+    pGrid.removeAttribute('aria-busy');
     observeReveal(pGrid);
     segmented($('[data-target="projects"]'), f => filterGrid(pGrid, f, $('#project-empty')));
 

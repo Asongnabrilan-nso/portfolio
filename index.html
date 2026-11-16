@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/Brilan.jpg" as="image" fetchpriority="high" />
   <link rel="stylesheet" href="css/style.css" />
   <script>
     document.documentElement.classList.add('js');
@@ -79,11 +80,11 @@
         </div>
 
         <div class="hero-portrait reveal">
-          <a href="#contact" class="portrait" id="portrait" aria-label="Nice connecting with you. Leave me a message.">
+          <a href="#contact" class="portrait" id="portrait" data-cursor="Say hi" aria-label="Nice connecting with you. Leave me a message.">
             <span class="orbit orbit-1" aria-hidden="true"><i></i></span>
             <span class="orbit orbit-2" aria-hidden="true"><i></i></span>
             <span class="portrait-frame">
-              <img src="assets/Brilan.jpg" alt="Portrait of Asongna Brilan" width="560" height="560" />
+              <img src="assets/Brilan.jpg" alt="Portrait of Asongna Brilan" width="560" height="560" fetchpriority="high" decoding="async" />
               <span class="portrait-hover" aria-hidden="true">
                 <span class="ph-title">Nice connecting with you!</span>
                 <span class="ph-sub">Leave me a message <span class="arrow">→</span></span>
@@ -249,7 +250,11 @@
           <button role="tab" aria-selected="false" data-filter="collab">Collaborations</button>
         </div>
 
-        <div class="cards cards-3 projects" id="project-grid" aria-live="polite"></div>
+        <div class="cards cards-3 projects" id="project-grid" aria-live="polite" aria-busy="true">
+          <article class="card project skeleton" aria-hidden="true"><div class="card-content"><div class="sk sk-line" style="width:40%"></div><div class="sk sk-title"></div><div class="sk sk-line"></div><div class="sk sk-line" style="width:85%"></div><div style="display:flex;gap:.4rem"><div class="sk sk-chip"></div><div class="sk sk-chip"></div><div class="sk sk-chip"></div></div></div></article>
+          <article class="card project skeleton" aria-hidden="true"><div class="card-content"><div class="sk sk-line" style="width:40%"></div><div class="sk sk-title"></div><div class="sk sk-line"></div><div class="sk sk-line" style="width:85%"></div><div style="display:flex;gap:.4rem"><div class="sk sk-chip"></div><div class="sk sk-chip"></div><div class="sk sk-chip"></div></div></div></article>
+          <article class="card project skeleton" aria-hidden="true"><div class="card-content"><div class="sk sk-line" style="width:40%"></div><div class="sk sk-title"></div><div class="sk sk-line"></div><div class="sk sk-line" style="width:85%"></div><div style="display:flex;gap:.4rem"><div class="sk sk-chip"></div><div class="sk sk-chip"></div><div class="sk sk-chip"></div></div></div></article>
+          </div>
         <p class="empty" id="project-empty" hidden>Collaborations are on the way. Check back soon.</p>
 
         <noscript>
@@ -296,7 +301,7 @@
               <h3>Résumé</h3>
               <p>My experience, skills and projects on one page.</p>
             </div>
-            <a href="assets/Asongna-Brilan-Resume.pdf" class="btn btn-primary" id="resume-btn" download>
+            <a href="assets/Asongna-Brilan-Resume.pdf" class="btn btn-primary" id="resume-btn" download data-cursor="Get PDF">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14" /></svg>
               Download PDF
             </a>
@@ -372,7 +377,7 @@
     <div class="sheet-body" id="sheet-body"></div>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js" defer></script>
 </body>
 
 </html>
