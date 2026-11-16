@@ -40,5 +40,19 @@
       "assets/achievements/introduction-to-embedded-machine-learning-mwjue165-0.jpg"
     ],
     "image": "assets/achievements/introduction-to-embedded-machine-learning-mwjue165-0.jpg"
+  },
+  {
+    "id": "master-of-survival-winner",
+    "title": "Master of Survival Winner",
+    "type": "certificate",
+    "issuer": "TME Tech Master Event",
+    "date": "2025-10",
+    "summary": "",
+    "description": "",
+    "url": "",
+    "images": [
+      "assets/achievements/master-of-survival-winner-mwjv3zhs-0.jpg"
+    ],
+    "image": "assets/achievements/master-of-survival-winner-mwjv3zhs-0.jpg"
   }
 ]
