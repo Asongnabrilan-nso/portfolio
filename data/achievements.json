@@ -34,7 +34,7 @@
     "issuer": "Coursera",
     "date": "2025-09",
     "summary": "",
-    "description": "",
+    "description": "Machine learning (ML) allows us to teach computers to make predictions and decisions based on data and learn from experiences. In recent years, incredible optimizations have been made to machine learning algorithms, software frameworks, and embedded hardware. Thanks to this, running deep neural networks and other complex machine learning algorithms is possible on low-power devices like microcontrollers.",
     "url": "",
     "images": [
       "assets/achievements/introduction-to-embedded-machine-learning-mwjue165-0.jpg"
