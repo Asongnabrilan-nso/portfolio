@@ -26,5 +26,19 @@
       "assets/achievements/certificate-of-participation-sustainable-industr-mwju4nen-0.jpg"
     ],
     "image": "assets/achievements/certificate-of-participation-sustainable-industr-mwju4nen-0.jpg"
+  },
+  {
+    "id": "introduction-to-embedded-machine-learning",
+    "title": "Introduction to Embedded Machine Learning",
+    "type": "certificate",
+    "issuer": "Coursera",
+    "date": "2025-09",
+    "summary": "",
+    "description": "",
+    "url": "",
+    "images": [
+      "assets/achievements/introduction-to-embedded-machine-learning-mwjue165-0.jpg"
+    ],
+    "image": "assets/achievements/introduction-to-embedded-machine-learning-mwjue165-0.jpg"
   }
 ]
