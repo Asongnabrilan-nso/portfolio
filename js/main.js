@@ -320,38 +320,6 @@
     });
   }
 
-  /* Custom cursor: dot + eased ring, grows on links, shows labels on [data-cursor] */
-  if (finePointer && !reduceMotion && !lowEnd) {
-    const dot = document.createElement('div'), ring = document.createElement('div');
-    dot.className = 'cursor-dot'; ring.className = 'cursor-ring';
-    dot.setAttribute('aria-hidden', 'true'); ring.setAttribute('aria-hidden', 'true');
-    const label = document.createElement('span'); ring.appendChild(label);
-    document.body.append(dot, ring);
-    let mx = -100, my = -100, rx = -100, ry = -100, shown = false;
-    const body = document.body;
-    addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse') return;
-      mx = e.clientX; my = e.clientY;
-      dot.style.transform = `translate(${mx}px, ${my}px)`;
-      if (!shown) { shown = true; rx = mx; ry = my; body.classList.add('has-cursor'); }
-      const t = e.target.closest ? e.target : null;
-      const labelled = t && t.closest('[data-cursor]');
-      const interactive = t && t.closest('a, button, input, textarea, select, label, [role="tab"]');
-      body.classList.toggle('cursor-label', !!labelled);
-      body.classList.toggle('cursor-hover', !labelled && !!interactive);
-      if (labelled) label.textContent = labelled.dataset.cursor;
-    }, { passive: true });
-    document.addEventListener('pointerleave', () => { shown = false; body.classList.remove('has-cursor'); });
-    addEventListener('pointerdown', () => body.classList.add('cursor-down'));
-    addEventListener('pointerup', () => body.classList.remove('cursor-down'));
-    const follow = () => {
-      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(follow);
-    };
-    requestAnimationFrame(follow);
-  }
-
   /* ---------- Data ---------- */
   const load = path => fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : []).catch(() => []);
   const firstImg = item => (item.images && item.images[0]) || item.image || '';
@@ -359,7 +327,7 @@
   /* ---------- Projects ---------- */
   const statusClass = s => 'status-' + String(s || '').toLowerCase().replace(/\s+/g, '-');
   const projectCard = (p, i) => `
-    <article class="card project reveal${p.featured ? ' featured' : ''}${firstImg(p) ? ' has-media' : ''}" data-type="${esc(p.type)}" data-cursor="View">
+    <article class="card project reveal${p.featured ? ' featured' : ''}${firstImg(p) ? ' has-media' : ''}" data-type="${esc(p.type)}">
       ${firstImg(p) ? `<div class="card-media"><img src="${esc(safeUrl(firstImg(p)))}" alt="" loading="lazy"></div>` : ''}
       <div class="card-content">
         <div class="project-meta">
@@ -384,7 +352,7 @@
     return isNaN(dt) ? d : dt.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
   };
   const achCard = (a, i) => `
-    <article class="card ach reveal${a.image ? ' has-media' : ''}" data-type="${esc(a.type)}" data-cursor="View">
+    <article class="card ach reveal${a.image ? ' has-media' : ''}" data-type="${esc(a.type)}">
       ${a.image ? `<div class="card-media ach-media"><img src="${esc(safeUrl(a.image))}" alt="" loading="lazy"></div>` : `
         <div class="ach-icon" aria-hidden="true">${a.type === 'award'
           ? '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 21.5l5-2.5 5 2.5-1.5-8"/></svg>'

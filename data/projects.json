@@ -7,7 +7,7 @@
     "year": "2025-2026",
     "partner": "",
     "summary": "A ~$300 floating AI sentinel on an Arduino UNO Q that watches rivers and coastlines for plastic pollution around the clock and logs water quality.",
-    "description": "MarineSentinel started on a visit to Limbe Down Beach in Cameroon, watching plastic wash in through the drains and inlets that feed the ocean. Pollution there is rarely measured continuously, and commercial water sondes cost US$25,000 to 40,000.\n\nMarineSentinel is a low-cost floating buoy that detects plastic debris with on-device computer vision and logs water-quality data around the clock, giving local communities and municipalities real numbers to act on.",
+    "description": "MarineSentinel started on a visit to a coastal beach, watching plastic wash in through the drains and inlets that feed the ocean. Pollution there is rarely measured continuously, and commercial water sondes cost US$25,000 to 40,000.\n\nMarineSentinel is a low-cost floating buoy that detects plastic debris with on-device computer vision and logs water-quality data around the clock, giving local communities and municipalities real numbers to act on.",
     "role": "Lead engineer: electronics, firmware, edge AI and enclosure design",
     "images": [],
     "tags": ["Edge AI", "Computer vision", "Fusion 360", "Sensors"],
