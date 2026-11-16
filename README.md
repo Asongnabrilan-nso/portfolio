@@ -39,11 +39,12 @@ data/achievements.json     Awards & certificates (edited through admin.html)
 assets/Brilan.jpg          Profile photo (hero circle)
 assets/Asongna-Brilan-Resume.pdf   Résumé offered for download
 assets/projects/           Project pictures uploaded by the admin
-assets/achievements/       Award / certificate pictures uploaded by the admin
+assets/achievements/       Award / certificate pictures and PDFs uploaded by the admin
 css/style.css              Design tokens and all site styles
 css/admin.css              Admin page styles
 js/main.js                 Site behaviour: theme, menu, animations, project cards, contact form
 js/admin.js                Admin editor logic
+js/vendor/pdfjs/           PDF.js (Mozilla), used by the admin to preview certificate PDFs
 ```
 
 | I want to change… | Where |
@@ -106,8 +107,17 @@ Use **↑ / ↓** in the list to reorder; the site shows items in the same order
 ### Achievements
 
 Same flow on the **Achievements** tab: title, *Award* or *Certificate*, issuer, date, summary,
-description, verification link and one picture. The Achievements section and its menu link stay hidden on the
-site until there's at least one entry.
+description and a verification link.
+
+**Certificate file:** drag your certificate **PDF** (up to 15 MB) onto the *Certificate file* box, or click it to browse.
+The editor automatically turns page 1 into the preview picture shown on the card. Wait for
+*"PDF added, with a preview of page 1"* before saving (the Save button is paused while it works).
+You can also use a photo or screenshot instead of, or alongside, the PDF.
+
+On the site, visitors see the preview on the card plus a **PDF** link. Opening the card shows the full PDF inside
+the page on desktop, and **Open certificate (PDF)** and **Download** buttons on every device.
+
+The Achievements section and its menu link stay hidden on the site until there's at least one entry.
 
 ---
 

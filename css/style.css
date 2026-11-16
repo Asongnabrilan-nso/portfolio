@@ -1335,3 +1335,9 @@ p { hanging-punctuation: first; }
   .facts { grid-template-columns: 1fr 1fr; }
 }
 .section-head .section-lead, .section-head .title, .section-head .eyebrow { justify-self: start; margin-left: 0; }
+
+/* Certificate PDF inside the detail sheet */
+.pdf-view { border-bottom: var(--bw) solid var(--text); background: var(--bg); }
+.pdf-view iframe { display: block; width: 100%; height: min(70vh, 640px); border: 0; }
+.sheet:has(.pdf-view) { width: min(900px, calc(100vw - 2rem)); }
+.ach-media img { object-position: top center; }

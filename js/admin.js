@@ -12,6 +12,7 @@
   const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
   const MAX_IMG = 1600;           // longest edge after resize (px)
   const JPEG_Q = 0.85;
+  const MAX_PDF_MB = 15;          // GitHub-friendly size limit for certificate PDFs
 
   const COLS = {
     projects: { file: 'data/projects.json', dir: 'assets/projects', noun: 'project', multiImage: true },
@@ -233,10 +234,11 @@
       ${F.area('summary', 'Short summary', it.summary, 2, 'Shown on the card.')}
       ${F.area('description', 'Full description', it.description, 5, 'Shown when someone opens it.')}
       ${F.text('url', 'Credential / news link', it.url, 'type="url" placeholder="https://"')}
-      ${imagesField(false)}`;
+      ${certField()}`;
   }
   const linkRow = (l = {}) => `<div class="link-row"><input placeholder="Label (e.g. GitHub)" value="${esc(l.label)}" data-k="label"><input type="url" placeholder="https://" value="${esc(l.url)}" data-k="url"><button type="button" class="icon-btn" data-rm-link aria-label="Remove link">✕</button></div>`;
   const linksField = links => `<div class="field"><label>Links</label><div class="links-editor" id="links">${links.map(linkRow).join('')}</div><button type="button" class="btn btn-ghost btn-sm" id="add-link" style="justify-self:start">+ Add link</button></div>`;
+  const certField = () => `<div class="field"><label>Certificate file</label><div class="img-grid" id="imgs"></div><p class="hint">Drop the certificate <b>PDF</b> (up to ${MAX_PDF_MB} MB): a preview picture of page 1 is created automatically. You can also use a photo or screenshot instead.</p></div>`;
   const imagesField = multi => `<div class="field"><label>${multi ? 'Pictures' : 'Picture of the award / certificate'}</label><div class="img-grid" id="imgs"></div><p class="hint">${multi ? 'The first picture is the cover. ' : ''}Images are resized to ${MAX_IMG}px and uploaded when you save.</p></div>`;
 
   function renderImages() {
@@ -250,15 +252,25 @@
           <button type="button" data-img="rm" data-i="${i}" aria-label="Remove picture">✕</button>
         </div>
       </div>`).join('');
-    const canAdd = multi || editing.images.length === 0;
-    $('#imgs').innerHTML = tiles + (canAdd ? `<label class="img-add" id="img-add">+ Add ${multi ? 'pictures' : 'picture'}<br>or drop here<input type="file" accept="image/*" ${multi ? 'multiple' : ''}></label>` : '');
+    const pdfTile = editing.pdf ? `
+      <div class="img-tile pdf-tile${editing.pdf.dataUrl ? ' pending' : ''}">
+        <div class="pdf-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><b>PDF</b><span>${esc(editing.pdf.name || editing.pdf.path.split('/').pop())}</span></div>
+        <div class="tile-actions"><span></span><button type="button" data-img="rm-pdf" aria-label="Remove PDF">✕</button></div>
+      </div>` : '';
+    const canAdd = multi || editing.images.length === 0 || !editing.pdf;
+    const accept = multi ? 'image/*' : 'image/*,application/pdf,.pdf';
+    const what = multi ? 'pictures' : (editing.pdf ? 'picture' : 'PDF or picture');
+    $('#imgs').innerHTML = pdfTile + tiles + (canAdd ? `<label class="img-add" id="img-add">+ Add ${what}<br>or drop here<input type="file" accept="${accept}" ${multi ? 'multiple' : ''}></label>` : '');
   }
 
   function openEditor(index) {
     const col = state.col, isNew = index < 0;
     const it = isNew ? {} : state.data[col][index];
     const imgs = col === 'projects' ? (it.images || []) : (it.image ? [it.image] : []);
-    editing = { index, images: imgs.map(path => ({ path })), original: imgs.slice() };
+    editing = {
+      index, images: imgs.map(path => ({ path })), original: imgs.slice(),
+      pdf: it.file ? { path: it.file } : null, originalPdf: it.file || '',
+    };
     $('#editor-title').textContent = `${isNew ? 'New' : 'Edit'} ${COLS[col].noun}`;
     $('#fields').innerHTML = fieldsFor(col, it);
     $('#delete-btn').hidden = isNew;
@@ -277,7 +289,8 @@
     const ib = e.target.closest('[data-img]');
     if (ib) {
       const i = +ib.dataset.i;
-      if (ib.dataset.img === 'rm') editing.images.splice(i, 1);
+      if (ib.dataset.img === 'rm-pdf') editing.pdf = null;
+      else if (ib.dataset.img === 'rm') editing.images.splice(i, 1);
       else editing.images.unshift(editing.images.splice(i, 1)[0]);
       renderImages();
     }
@@ -290,8 +303,13 @@
     if (ev === 'drop') addFiles(e.dataTransfer.files);
   }));
 
+  const isPdf = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
   async function addFiles(files) {
     const multi = COLS[state.col].multiImage;
+    if (!multi) {
+      const pdf = [...files].find(isPdf);
+      if (pdf) { await addPdf(pdf); return; }
+    }
     for (const file of [...files].filter(f => f.type.startsWith('image/'))) {
       try {
         editing.images.push({ dataUrl: await resize(file), name: file.name });
@@ -299,6 +317,51 @@
       } catch (err) { setStatus($('#edit-status'), `Couldn't read ${file.name}.`, 'err'); }
     }
     renderImages();
+  }
+  // Certificate PDFs: keep the file and render page 1 as the card picture
+  async function addPdf(file) {
+    const st = $('#edit-status');
+    if (file.size > MAX_PDF_MB * 1024 * 1024) { setStatus(st, `${file.name} is larger than ${MAX_PDF_MB} MB. Please compress it first.`, 'err'); return; }
+    setStatus(st, `Reading ${file.name} and creating a preview…`);
+    const saveBtn = $('#save-btn'); saveBtn.disabled = true; // don't publish half-processed files
+    try {
+      const dataUrl = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+      editing.pdf = { dataUrl, name: file.name };
+      try {
+        const preview = await pdfPreview(file);
+        editing.images = [{ dataUrl: preview, name: file.name + '.jpg' }];
+        setStatus(st, 'PDF added, with a preview of page 1. Click Save & publish to upload.', 'ok');
+      } catch (e) {
+        setStatus(st, 'PDF added. A preview could not be generated, so you can add a picture yourself.', 'err');
+      }
+    } catch (e) { setStatus(st, `Couldn't read ${file.name}.`, 'err'); }
+    finally { saveBtn.disabled = false; }
+    renderImages();
+  }
+  let pdfjsReady = null;
+  function loadPdfJs() {
+    if (!pdfjsReady) pdfjsReady = new Promise((resolve, reject) => {
+      const sc = document.createElement('script');
+      sc.src = 'js/vendor/pdfjs/pdf.min.js';
+      sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdfjs/pdf.worker.min.js'; resolve(window.pdfjsLib); };
+      sc.onerror = () => { pdfjsReady = null; reject(new Error('PDF tools failed to load')); };
+      document.head.appendChild(sc);
+    });
+    return pdfjsReady;
+  }
+  async function pdfPreview(file) {
+    const pdfjs = await loadPdfJs();
+    const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const page = await doc.getPage(1);
+    const base = page.getViewport({ scale: 1 });
+    const viewport = page.getViewport({ scale: Math.min(3, MAX_IMG / Math.max(base.width, base.height)) });
+    const c = document.createElement('canvas');
+    c.width = Math.round(viewport.width); c.height = Math.round(viewport.height);
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    doc.destroy();
+    return c.toDataURL('image/jpeg', JPEG_Q);
   }
   function resize(file) {
     return new Promise((resolve, reject) => {
@@ -349,6 +412,13 @@
       paths.push(path);
     });
     const deletes = editing.original.filter(p => !paths.includes(p) && p.startsWith(cfg.dir + '/'));
+    let filePath = '';
+    if (editing.pdf && editing.pdf.path) filePath = editing.pdf.path;
+    if (editing.pdf && editing.pdf.dataUrl) {
+      filePath = `${cfg.dir}/${id}-${Date.now().toString(36)}.pdf`;
+      uploads.push({ path: filePath, base64: editing.pdf.dataUrl.split(',')[1] });
+    }
+    if (editing.originalPdf && editing.originalPdf !== filePath && editing.originalPdf.startsWith(cfg.dir + '/')) deletes.push(editing.originalPdf);
 
     let item;
     if (col === 'projects') {
@@ -363,7 +433,7 @@
     } else {
       item = {
         id, title: v('title'), type: v('type'), issuer: v('issuer'), date: v('date'),
-        summary: v('summary'), description: v('description'), url: v('url'), image: paths[0] || '',
+        summary: v('summary'), description: v('description'), url: v('url'), image: paths[0] || '', file: filePath,
       };
     }
 
@@ -371,7 +441,7 @@
     if (editing.index >= 0) items[editing.index] = item; else items.push(item);
 
     const btn = $('#save-btn'); btn.disabled = true; btn.textContent = 'Publishing…';
-    setStatus($('#edit-status'), uploads.length ? `Uploading ${uploads.length} picture${uploads.length > 1 ? 's' : ''} and saving…` : 'Saving…');
+    setStatus($('#edit-status'), uploads.length ? `Uploading ${uploads.length} file${uploads.length > 1 ? 's' : ''} and saving…` : 'Saving…');
     try {
       await commit({ col, message: `${editing.index >= 0 ? 'Update' : 'Add'} ${cfg.noun}: ${item.title} (admin)`, uploads, deletes });
       editing = null;
@@ -386,10 +456,11 @@
   $('#delete-btn').addEventListener('click', async () => {
     const col = state.col, cfg = COLS[col], items = state.data[col];
     const it = items[editing.index];
-    if (!confirm(`Delete “${it.title}” from your portfolio? This removes it and its pictures from the site.`)) return;
+    if (!confirm(`Delete “${it.title}” from your portfolio? This removes it and its files from the site.`)) return;
     const before = items.slice();
     items.splice(editing.index, 1);
     const deletes = editing.original.filter(p => p.startsWith(cfg.dir + '/'));
+    if (editing.originalPdf && editing.originalPdf.startsWith(cfg.dir + '/')) deletes.push(editing.originalPdf);
     setStatus($('#edit-status'), 'Deleting…');
     try {
       await commit({ col, message: `Remove ${cfg.noun}: ${it.title} (admin)`, deletes });

@@ -367,6 +367,7 @@
         ${a.summary ? `<p class="project-desc">${esc(a.summary)}</p>` : ''}
         <div class="project-links">
           <button class="more" data-open="ach" data-index="${i}">Details <span aria-hidden="true">→</span></button>
+          ${a.file ? `<a href="${esc(safeUrl(a.file))}" target="_blank" rel="noopener">PDF <span aria-hidden="true">↗</span></a>` : ''}
           ${a.url ? `<a href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify'} <span aria-hidden="true">↗</span></a>` : ''}
         </div>
       </div>
@@ -427,15 +428,28 @@
       ${(p.tags || []).length ? `<ul class="chips">${p.tags.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
       ${(p.links || []).length ? `<div class="sheet-links">${p.links.map(l => `<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('')}</div>` : ''}
     </div>`;
-  const achSheet = a => `
-    ${gallery(a.image ? [a.image] : [])}
+  // Desktop browsers show the PDF inline; phones get the preview picture plus open/download buttons
+  const inlinePdf = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 700px)').matches;
+  const achSheet = a => {
+    const pdf = a.file ? esc(safeUrl(a.file)) : '';
+    const media = pdf && inlinePdf
+      ? `<div class="pdf-view"><iframe src="${pdf}#view=FitH&toolbar=0" title="${esc(a.title)} (PDF)" loading="lazy"></iframe></div>`
+      : gallery(a.image ? [a.image] : []);
+    const links = [
+      pdf ? `<a class="btn btn-primary btn-sm" href="${pdf}" target="_blank" rel="noopener">Open certificate (PDF) ↗</a>` : '',
+      pdf ? `<a class="btn btn-ghost btn-sm" href="${pdf}" download>Download</a>` : '',
+      a.url ? `<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify credential'} ↗</a>` : '',
+    ].join('');
+    return `
+    ${media}
     <div class="sheet-text">
       <p class="eyebrow">${a.type === 'award' ? 'Award' : 'Certificate'}${a.date ? ' · ' + esc(fmtDate(a.date)) : ''}</p>
       <h2 id="sheet-title" class="sheet-title">${esc(a.title)}</h2>
       ${a.issuer ? `<p class="sheet-sub">${esc(a.issuer)}</p>` : ''}
-      <div class="prose">${paras(a.description || a.summary)}</div>
-      ${a.url ? `<div class="sheet-links"><a class="btn btn-ghost btn-sm" href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify credential'} ↗</a></div>` : ''}
+      ${a.description || a.summary ? `<div class="prose">${paras(a.description || a.summary)}</div>` : ''}
+      ${links ? `<div class="sheet-links">${links}</div>` : ''}
     </div>`;
+  };
 
   /* ---------- Render ---------- */
   Promise.all([load('data/projects.json'), load('data/achievements.json')]).then(([projects, achievements]) => {
