@@ -220,14 +220,22 @@
     const GAP = 46, R = 150;
     const color = () => getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#000';
     let ink = color();
+    let inHole = () => false;
     const resize = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
       W = hero.clientWidth; H = hero.clientHeight;
       canvas.width = W * dpr; canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Keep the grid out from behind text and buttons so solid ink never crosses copy
+      const base = canvas.getBoundingClientRect(), PAD = 14;
+      const holes = $$('.hero-copy > *, .hero-stats, .portrait-note', hero).map(el => {
+        const r = el.getBoundingClientRect();
+        return { l: r.left - base.left - PAD, t: r.top - base.top - PAD, r: r.right - base.left + PAD, b: r.bottom - base.top + PAD };
+      });
+      inHole = (x, y) => holes.some(h => x > h.l && x < h.r && y > h.t && y < h.b);
       nodes = [];
       for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) {
-        nodes.push({ x, y, glow: 0, seed: Math.random() * Math.PI * 2 });
+        if (!inHole(x, y)) nodes.push({ x, y, glow: 0, seed: Math.random() * Math.PI * 2 });
       }
       draw(performance.now());
     };
@@ -239,17 +247,17 @@
         const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
         const target = d < R ? 1 - d / R : 0;
         n.glow += (target - n.glow) * 0.12;
-        const idle = reduceMotion ? 0 : (Math.sin(t / 1400 + n.seed) + 1) * 0.02;
-        ctx.globalAlpha = 0.08 + idle + n.glow * 0.5;
-        ctx.beginPath(); ctx.arc(n.x, n.y, 1.1 + n.glow * 1.6, 0, Math.PI * 2); ctx.fill();
-        if (n.glow > 0.15) near.push(n);
+        // Pure black/white: solid ink, emphasis by size only (no translucency)
+        const idle = reduceMotion ? 0 : (Math.sin(t / 1400 + n.seed) + 1) * 0.15;
+        ctx.beginPath(); ctx.arc(n.x, n.y, 0.7 + idle + n.glow * 2.2, 0, Math.PI * 2); ctx.fill();
+        if (n.glow > 0.25) near.push(n);
       }
       // Right-angle "traces" between lit neighbours, like a PCB
       ctx.lineWidth = 1;
       for (const a of near) for (const b of near) {
         if (b === a || b.x < a.x || (b.x === a.x && b.y <= a.y)) continue;
         if (Math.abs(a.x - b.x) > GAP || Math.abs(a.y - b.y) > GAP) continue;
-        ctx.globalAlpha = Math.min(a.glow, b.glow) * 0.45;
+        if (inHole(b.x, a.y)) continue; // the trace's corner would cross text
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
       ctx.globalAlpha = 1;
@@ -269,6 +277,8 @@
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { ink = color(); });
     let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
     resize();
+    if (document.fonts) document.fonts.ready.then(resize);
+    setTimeout(resize, 1200); // after entrance animations settle
   }
 
   /* Scroll-linked storytelling: hero eases away, process line fills */
