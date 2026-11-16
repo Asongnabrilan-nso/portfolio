@@ -13,26 +13,40 @@ reduced-motion, reduced-transparency and high-contrast settings. Brand colors ar
 ## Structure
 
 ```
-index.html            all page content
-css/style.css         design tokens (top of file) and styles
-js/projects.js        the project list, edit this to add projects
-js/main.js            theme, menu, project filter, contact form, animations
-assets/Brilan.jpg     profile photo
-assets/Asongna-Brilan-Resume.pdf   your résumé (add this file)
+index.html                 page layout and fixed text (About, Expertise, Ventures, Contact)
+admin.html                 private editor for Projects and Achievements
+data/projects.json         project list (edited through admin.html)
+data/achievements.json     awards and certificates (edited through admin.html)
+assets/projects/           project pictures uploaded by the admin
+assets/achievements/       award / certificate pictures uploaded by the admin
+assets/Asongna-Brilan-Resume.pdf   résumé offered for download
+css/style.css              design tokens (top of file) and styles
+css/admin.css              admin page styles
+js/main.js                 site behaviour (theme, menu, filters, detail sheet, contact form)
+js/admin.js                admin editor
 ```
 
-## Common updates
+## Editing projects and achievements (admin)
 
-**Add a project:** open `js/projects.js` and copy an entry. Use `type: 'own'` for your projects and
-`type: 'collab'` for collaborations (add `partner: 'Team name'`).
+1. Open **https://asongnabrilan-nso.github.io/portfolio/admin.html**.
+2. Sign in with a GitHub **fine-grained personal access token**:
+   GitHub → Settings → Developer settings → Fine-grained tokens → *Generate new token*
+   - Repository access: **Only select repositories → portfolio**
+   - Permissions → Repository permissions → **Contents: Read and write**
+3. Add, edit, reorder or delete projects and achievements. You can add a title, kind (my project or collaboration),
+   status, year, partner, summary, full description, your role, tags, links, a featured flag and several pictures
+   (the first is the cover). Achievements take a title, award or certificate, issuer, date, description, link and one picture.
+4. **Save & publish** commits everything to GitHub in one commit. The site updates in about a minute.
 
-**Résumé download:** save your PDF as `assets/Asongna-Brilan-Resume.pdf` and push. Until the file
-exists, the button switches to "Request by email".
+The token stays in your browser only (for the session, or on that device if you tick *Remember*). Never paste it into
+the website's code. Anyone can open `admin.html`, but nobody can change anything without your token.
+The Achievements section stays hidden on the site until it has at least one entry.
 
-**Contact form:** messages are delivered to `b.asongna@plastibytes.com` through
-[FormSubmit](https://formsubmit.co) (free, no account). The **first** time someone submits the form,
-FormSubmit sends an activation email to that address. Click the link in it once, and every
-message after that is delivered. If the service is unreachable, the form offers a "send from your email app" fallback.
+## Contact form
+
+Messages are delivered to `b.asongna@plastibytes.com` through [FormSubmit](https://formsubmit.co).
+**Activate it once:** FormSubmit sent an email with an *Activate Form* link to that address (check spam).
+Until it is clicked, the form shows "waiting to be activated". After that, messages arrive normally.
 
 ## Publishing
 

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "marinesentinel",
+    "title": "MarineSentinel",
+    "type": "own",
+    "status": "Active",
+    "year": "2025–2026",
+    "partner": "",
+    "summary": "A ~$300 floating AI sentinel on an Arduino UNO Q that watches rivers and coastlines for plastic pollution around the clock and logs water quality.",
+    "description": "MarineSentinel started on a visit to Limbe Down Beach in Cameroon, watching plastic wash in through the drains and inlets that feed the ocean. Pollution there is rarely measured continuously, and commercial water sondes cost US$25,000–40,000.\n\nMarineSentinel is a low-cost floating buoy that detects plastic debris with on-device computer vision and logs water-quality data around the clock, giving local communities and municipalities real numbers to act on.",
+    "role": "Lead engineer: electronics, firmware, edge AI and enclosure design",
+    "images": [],
+    "tags": ["Edge AI", "Computer vision", "Fusion 360", "Sensors"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/Asongnabrilan-nso/MarineSentinel_v1" },
+      { "label": "Write-up", "url": "https://www.hackster.io/abrilannso/marinesentinel-60f927" }
+    ],
+    "featured": true
+  },
+  {
+    "id": "plastisense",
+    "title": "PlastiSense",
+    "type": "own",
+    "status": "Complete",
+    "year": "2026",
+    "partner": "",
+    "summary": "A precision filament-diameter sensor on the XIAO ESP32-C3 with a custom KiCad PCB, 3D-printed housing, on-device web dashboard, REST API and OTA updates.",
+    "description": "PlastiSense monitors 3D-printer filament quality in real time, reporting high-precision diameter readings in millimetres.\n\nThe device hosts its own web dashboard, exposes a JSON REST API for tools like OctoPrint and Home Assistant, sets up over Wi-Fi through a captive portal and supports over-the-air firmware updates. Hardware includes a custom KiCad PCB and 3D-printable enclosure.",
+    "role": "Designer and developer: PCB, firmware and mechanical",
+    "images": [],
+    "tags": ["ESP32-C3", "KiCad PCB", "PlatformIO", "REST API"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/Asongnabrilan-nso/PlastiSense" },
+      { "label": "Demo", "url": "https://youtu.be/B_dy0DAJdtQ" }
+    ],
+    "featured": false
+  },
+  {
+    "id": "plastiwatch",
+    "title": "PlastiWatch",
+    "type": "own",
+    "status": "In progress",
+    "year": "2026",
+    "partner": "",
+    "summary": "An edge-AI smartwatch: low-power wearable hardware running on-device inference, explored in both C and Rust firmware.",
+    "description": "",
+    "role": "",
+    "images": [],
+    "tags": ["Wearables", "Edge AI", "C", "Rust"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/Asongnabrilan-nso/PlastiWatch" }
+    ],
+    "featured": false
+  },
+  {
+    "id": "xiao-joystick",
+    "title": "XIAO ESP32-C3 Joystick",
+    "type": "own",
+    "status": "Complete",
+    "year": "2026",
+    "partner": "",
+    "summary": "A compact wireless joystick controller built on the Seeed XIAO ESP32-C3 for driving robots and interactive hardware.",
+    "description": "",
+    "role": "",
+    "images": [],
+    "tags": ["ESP32-C3", "Robotics", "Wireless control"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/Asongnabrilan-nso/xiao_esp32c3_joystick" }
+    ],
+    "featured": false
+  }
+]

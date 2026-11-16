@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Portfolio Admin</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='-apple-system,Helvetica,Arial' font-weight='700' font-size='28' fill='%23fff'%3EAB%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <script>
+    document.documentElement.classList.add('js');
+    try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) { }
+  </script>
+</head>
+
+<body class="admin">
+  <header class="nav scrolled">
+    <div class="nav-inner">
+      <a href="./" class="nav-logo">← Portfolio</a>
+      <span class="admin-badge">Admin</span>
+      <button class="btn btn-ghost btn-sm" id="sign-out" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main class="container admin-main">
+
+    <!-- ========== Sign in ========== -->
+    <section id="login" class="card admin-login">
+      <h1 class="title">Edit your portfolio</h1>
+      <p class="section-lead">Changes are saved straight to your GitHub repository and go live in about a minute.</p>
+      <form id="login-form" class="form">
+        <div class="field">
+          <label for="token">GitHub access token</label>
+          <input id="token" type="password" autocomplete="off" spellcheck="false" required placeholder="github_pat_…" />
+          <p class="field-error" id="login-error" aria-live="polite"></p>
+        </div>
+        <label class="check"><input type="checkbox" id="remember" /> Remember on this device</label>
+        <button class="btn btn-primary btn-block" type="submit" id="login-btn">Sign in</button>
+      </form>
+      <details class="help">
+        <summary>How do I get a token?</summary>
+        <ol>
+          <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Settings → Fine-grained tokens → Generate new token</a>.</li>
+          <li>Name it “Portfolio admin” and set an expiration.</li>
+          <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> → <code>portfolio</code>.</li>
+          <li>Under <b>Permissions → Repository permissions</b>, set <b>Contents</b> to <b>Read and write</b>.</li>
+          <li>Generate, copy, and paste it above. Treat it like a password; never put it in the website's code.</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- ========== Dashboard ========== -->
+    <section id="dash" hidden>
+      <div class="dash-head">
+        <div class="segmented" role="tablist" aria-label="Collection">
+          <span class="segmented-thumb" aria-hidden="true"></span>
+          <button role="tab" aria-selected="true" data-col="projects">Projects</button>
+          <button role="tab" aria-selected="false" data-col="achievements">Achievements</button>
+        </div>
+        <button class="btn btn-primary" id="add-btn">+ Add project</button>
+      </div>
+      <p class="admin-status" id="status" role="status"></p>
+      <ul class="admin-list" id="list"></ul>
+    </section>
+
+    <!-- ========== Editor ========== -->
+    <section id="editor" class="card" hidden>
+      <form id="edit-form" class="form" novalidate>
+        <div class="editor-head">
+          <h2 id="editor-title">New project</h2>
+          <button type="button" class="btn btn-ghost btn-sm" id="cancel-btn">Cancel</button>
+        </div>
+        <div id="fields"></div>
+        <div class="editor-actions">
+          <button type="button" class="btn btn-ghost danger" id="delete-btn">Delete</button>
+          <button type="submit" class="btn btn-primary" id="save-btn">Save &amp; publish</button>
+        </div>
+        <p class="admin-status" id="edit-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/admin.js"></script>
+</body>
+
+</html>
