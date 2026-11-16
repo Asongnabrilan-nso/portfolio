@@ -220,6 +220,7 @@
     const GAP = 46, R = 150;
     const color = () => getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#000';
     let ink = color();
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00D26A';
     let inHole = () => false;
     const resize = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -249,11 +250,12 @@
         n.glow += (target - n.glow) * 0.12;
         // Pure black/white: solid ink, emphasis by size only (no translucency)
         const idle = reduceMotion ? 0 : (Math.sin(t / 1400 + n.seed) + 1) * 0.15;
-        ctx.beginPath(); ctx.arc(n.x, n.y, 0.7 + idle + n.glow * 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = n.glow > 0.25 ? accent : ink; // lit nodes glow green
+        ctx.beginPath(); ctx.arc(n.x, n.y, 0.7 + idle + n.glow * 2.6, 0, Math.PI * 2); ctx.fill();
         if (n.glow > 0.25) near.push(n);
       }
       // Right-angle "traces" between lit neighbours, like a PCB
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.5; ctx.strokeStyle = accent;
       for (const a of near) for (const b of near) {
         if (b === a || b.x < a.x || (b.x === a.x && b.y <= a.y)) continue;
         if (Math.abs(a.x - b.x) > GAP || Math.abs(a.y - b.y) > GAP) continue;
