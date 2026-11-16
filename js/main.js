@@ -367,7 +367,6 @@
         ${a.summary ? `<p class="project-desc">${esc(a.summary)}</p>` : ''}
         <div class="project-links">
           <button class="more" data-open="ach" data-index="${i}">Details <span aria-hidden="true">→</span></button>
-          ${a.file ? `<a href="${esc(safeUrl(a.file))}" target="_blank" rel="noopener">PDF <span aria-hidden="true">↗</span></a>` : ''}
           ${a.url ? `<a href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify'} <span aria-hidden="true">↗</span></a>` : ''}
         </div>
       </div>
@@ -379,9 +378,12 @@
   const gallery = imgs => !imgs.length ? '' : `
     <div class="gallery">
       <div class="gallery-track" tabindex="0" aria-label="Image gallery">
-        ${imgs.map((src, i) => `<img src="${esc(safeUrl(src))}" alt="Image ${i + 1} of ${imgs.length}" loading="lazy">`).join('')}
+        ${imgs.map((src, i) => `<img src="${esc(safeUrl(src))}" alt="Image ${i + 1} of ${imgs.length}" loading="lazy" draggable="false">`).join('')}
       </div>
-      ${imgs.length > 1 ? `<div class="gallery-dots">${imgs.map((_, i) => `<span${i ? '' : ' class="on"'}></span>`).join('')}</div>` : ''}
+      ${imgs.length > 1 ? `
+        <button type="button" class="gallery-nav prev" data-dir="-1" aria-label="Previous image">‹</button>
+        <button type="button" class="gallery-nav next" data-dir="1" aria-label="Next image">›</button>
+        <div class="gallery-dots">${imgs.map((_, i) => `<span${i ? '' : ' class="on"'}></span>`).join('')}</div>` : ''}
     </div>`;
   const openSheet = html => {
     lastFocus = document.activeElement;
@@ -396,7 +398,13 @@
       const i = Math.round(track.scrollLeft / track.clientWidth);
       $$('.gallery-dots span', body).forEach((d, j) => d.classList.toggle('on', i === j));
     }, { passive: true });
+    $$('.gallery-nav', body).forEach(b => b.addEventListener('click', () =>
+      track.scrollBy({ left: +b.dataset.dir * track.clientWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })));
   };
+  // View-only certificates: block the context menu ("Save image as…") and dragging
+  ['contextmenu', 'dragstart'].forEach(ev => document.addEventListener(ev, e => {
+    if (e.target.closest && e.target.closest('.view-only, .ach .card-media')) e.preventDefault();
+  }));
   const closeSheet = () => {
     if (sheet.hidden) return;
     sheet.classList.remove('open'); scrim.classList.remove('open');
@@ -428,20 +436,14 @@
       ${(p.tags || []).length ? `<ul class="chips">${p.tags.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
       ${(p.links || []).length ? `<div class="sheet-links">${p.links.map(l => `<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('')}</div>` : ''}
     </div>`;
-  // Desktop browsers show the PDF inline; phones get the preview picture plus open/download buttons
-  const inlinePdf = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 700px)').matches;
+  // Certificates are view-only: page pictures in the viewer, no file links, no right-click/drag saving
   const achSheet = a => {
-    const pdf = a.file ? esc(safeUrl(a.file)) : '';
-    const media = pdf && inlinePdf
-      ? `<div class="pdf-view"><iframe src="${pdf}#view=FitH&toolbar=0" title="${esc(a.title)} (PDF)" loading="lazy"></iframe></div>`
-      : gallery(a.image ? [a.image] : []);
-    const links = [
-      pdf ? `<a class="btn btn-primary btn-sm" href="${pdf}" target="_blank" rel="noopener">Open certificate (PDF) ↗</a>` : '',
-      pdf ? `<a class="btn btn-ghost btn-sm" href="${pdf}" download>Download</a>` : '',
-      a.url ? `<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify credential'} ↗</a>` : '',
-    ].join('');
+    const pages = (a.images && a.images.length) ? a.images : (a.image ? [a.image] : []);
+    const links = a.url
+      ? `<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(a.url))}" target="_blank" rel="noopener">${a.type === 'award' ? 'Learn more' : 'Verify credential'} ↗</a>`
+      : '';
     return `
-    ${media}
+    ${pages.length ? `<div class="view-only">${gallery(pages)}<span class="view-only-tag">View only${pages.length > 1 ? ` · ${pages.length} pages, swipe` : ''}</span></div>` : ''}
     <div class="sheet-text">
       <p class="eyebrow">${a.type === 'award' ? 'Award' : 'Certificate'}${a.date ? ' · ' + esc(fmtDate(a.date)) : ''}</p>
       <h2 id="sheet-title" class="sheet-title">${esc(a.title)}</h2>

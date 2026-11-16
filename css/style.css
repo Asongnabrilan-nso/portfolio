@@ -1341,3 +1341,26 @@ p { hanging-punctuation: first; }
 .pdf-view iframe { display: block; width: 100%; height: min(70vh, 640px); border: 0; }
 .sheet:has(.pdf-view) { width: min(900px, calc(100vw - 2rem)); }
 .ach-media img { object-position: top center; }
+
+/* View-only certificates: no selection, dragging or long-press save */
+.view-only { position: relative; }
+.view-only img, .ach .card-media img {
+  -webkit-user-select: none; user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none;
+}
+.view-only .gallery-track img { pointer-events: none; }
+.view-only-tag {
+  position: absolute; top: .9rem; left: .9rem; z-index: 2;
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: .3rem .65rem; border-radius: 999px; background: var(--accent); color: var(--on-accent);
+  box-shadow: inset 0 0 0 1.5px #000;
+}
+.gallery-nav {
+  position: absolute; top: 50%; translate: 0 -50%; z-index: 2;
+  width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center;
+  font-size: 1.5rem; line-height: 1; background: var(--bg); color: var(--text);
+  box-shadow: inset 0 0 0 1.5px var(--text); transition: background-color .2s, color .2s;
+}
+.gallery-nav:hover { background: var(--accent); color: var(--on-accent); }
+.gallery-nav.prev { left: .75rem; }
+.gallery-nav.next { right: .75rem; }
+@media (pointer: coarse) { .gallery-nav { width: 2.75rem; height: 2.75rem; } }

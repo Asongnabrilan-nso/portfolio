@@ -39,12 +39,12 @@ data/achievements.json     Awards & certificates (edited through admin.html)
 assets/Brilan.jpg          Profile photo (hero circle)
 assets/Asongna-Brilan-Resume.pdf   Résumé offered for download
 assets/projects/           Project pictures uploaded by the admin
-assets/achievements/       Award / certificate pictures and PDFs uploaded by the admin
+assets/achievements/       Award / certificate pictures uploaded by the admin (PDFs are never uploaded)
 css/style.css              Design tokens and all site styles
 css/admin.css              Admin page styles
 js/main.js                 Site behaviour: theme, menu, animations, project cards, contact form
 js/admin.js                Admin editor logic
-js/vendor/pdfjs/           PDF.js (Mozilla), used by the admin to preview certificate PDFs
+js/vendor/pdfjs/           PDF.js (Mozilla), used by the admin to turn certificate PDFs into view-only pictures
 ```
 
 | I want to change… | Where |
@@ -109,13 +109,15 @@ Use **↑ / ↓** in the list to reorder; the site shows items in the same order
 Same flow on the **Achievements** tab: title, *Award* or *Certificate*, issuer, date, summary,
 description and a verification link.
 
-**Certificate file:** drag your certificate **PDF** (up to 15 MB) onto the *Certificate file* box, or click it to browse.
-The editor automatically turns page 1 into the preview picture shown on the card. Wait for
-*"PDF added, with a preview of page 1"* before saving (the Save button is paused while it works).
-You can also use a photo or screenshot instead of, or alongside, the PDF.
+**Certificate (view only):** drag your certificate **PDF** (up to 15 MB) onto the *Certificate* box, or click it
+to browse. The editor converts each page (up to 10) into a picture in your browser. **The PDF itself is never
+uploaded**, so there is no file on the site or in the repository for anyone to download. Wait for
+*"Converted N pages to view-only pictures"* before saving (the Save button is paused while it works).
+Page 1 becomes the card cover. You can also add photos or screenshots.
 
-On the site, visitors see the preview on the card plus a **PDF** link. Opening the card shows the full PDF inside
-the page on desktop, and **Open certificate (PDF)** and **Download** buttons on every device.
+On the site, visitors see the certificate on the card and can open it to view every page (swipe, or use the
+‹ › arrows). There are no download or PDF links, and right-click saving and image dragging are blocked.
+No website can stop a screenshot, so only publish certificates you're comfortable being seen.
 
 The Achievements section and its menu link stay hidden on the site until there's at least one entry.
 
